@@ -1,0 +1,37 @@
+name: Build C++ Source
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Build Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build g++-aarch64-linux-gnu
+
+      - name: Compile C++ Project
+        run: |
+          mkdir -p build && cd build
+          cmake .. -G Ninja
+          ninja
+        shell: bash
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-binaries
+          path: |
+            build/*.so
+            build/bin/*
+            build/*
