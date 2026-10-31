@@ -34,7 +34,7 @@ jobs:
       - name: Compile C++ Project
         run: |
           mkdir -p build && cd build
-          cmake $GITHUB_WORKSPACE/ports/left4dead2 -G Ninja \
+          cmake .. -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=arm64-v8a \
             -DANDROID_PLATFORM=android-33
@@ -46,7 +46,7 @@ jobs:
         with:
           name: L4D2-Mobile-Binaries
           path: |
-            ports/left4dead2/build/*.so
-            ports/left4dead2/build/*.apk
             build/*.so
             build/*.apk
+            *.so
+            *.apk
