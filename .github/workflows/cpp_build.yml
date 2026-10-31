@@ -15,23 +15,36 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK & NDK
+        uses: android-actions/setup-android@v3
+
       - name: Set up Build Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake ninja-build g++-aarch64-linux-gnu
+          sudo apt-get install -y build-essential ninja-build
 
       - name: Compile C++ Project
         run: |
           mkdir -p build && cd build
-          cmake .. -G Ninja
+          cmake ../ports/left4dead2 -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=android-33
           ninja
         shell: bash
 
       - name: Upload Binary Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-binaries
+          name: L4D2-Mobile-Binaries
           path: |
+            ports/left4dead2/build/*.so
+            ports/left4dead2/build/*.apk
             build/*.so
-            build/bin/*
-            build/*
+            build/*.apk
