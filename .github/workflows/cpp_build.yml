@@ -31,14 +31,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential ninja-build
 
-      - name: Debug Workspace Files
-        run: |
-          echo "=== Workspace Root Files ==="
-          ls -la $GITHUB_WORKSPACE
-          echo "=== Searching for CMakeLists.txt ==="
-          find $GITHUB_WORKSPACE -name "CMakeLists.txt"
-        shell: bash
-
       - name: Compile C++ Project
         run: |
           mkdir -p build && cd build
